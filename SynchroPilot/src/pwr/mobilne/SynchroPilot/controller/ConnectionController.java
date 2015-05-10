@@ -5,12 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
 
 import android.content.Context;
-import android.net.DhcpInfo;
-import android.net.wifi.WifiManager;
 import android.util.Log;
 
 /**
@@ -28,7 +25,7 @@ public class ConnectionController {
 	Boolean socketReady = false;
 	public String lastFoundIp = "";
 
-	private Context context;
+	Context context;
 
 	public synchronized void sendToSocket(String msg) {
 		if (socketReady) out.println(msg);
@@ -46,7 +43,7 @@ public class ConnectionController {
 	 * 
 	 */
 	private void scanIPsForServer() {
-		String ip = getWifiIpAddress();
+		String ip = ConnectionManager.getWifiIpAddress(context);
 		ip = ip.substring(0, ip.lastIndexOf("."));
 		for (int i = 1; i < 255 && socket == null; i++) {
 			new TCPConnectionTask(this).execute(ip + "." + i);
@@ -74,32 +71,6 @@ public class ConnectionController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	InetAddress getBroadcastAddress() throws IOException {
-		WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-		DhcpInfo dhcp = wifi.getDhcpInfo();
-		if (dhcp == null) return null;
-		// TODO handle null somehow
-
-		int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
-		byte[] quads = new byte[4];
-		for (int k = 0; k < 4; k++)
-			quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
-		return InetAddress.getByAddress(quads);
-	}
-
-	protected String getWifiIpAddress() {
-		WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-		DhcpInfo dhcp = wifi.getDhcpInfo();
-		if (dhcp == null) return null;
-		// TODO handle null somehow
-		String ipAddress = "";
-		for (int k = 0; k < 4; k++)
-			ipAddress += ((dhcp.ipAddress >> k * 8) & 0xFF) + ".";
-		ipAddress = ipAddress.substring(0, ipAddress.length() - 1);
-		Log.i("Connection Controller", ipAddress);
-		return ipAddress;
 	}
 
 	public static ConnectionController getInstance() {

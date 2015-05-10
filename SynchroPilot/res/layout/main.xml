@@ -1,13 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/GridLayout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
-<TextView
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:text="Hello World, PilotActivity"
-    />
-</LinearLayout>
+    android:columnCount="4"
+    android:orientation="horizontal" >
 
+    <Button
+        android:id="@+id/mediaPlayB"
+        android:tag="play" />
+
+    <Button
+        android:id="@+id/mediaPrevB"
+        android:tag="mediaPrev" />
+
+    <Button
+        android:id="@+id/mediaNextB"
+        android:tag="mediaNext" />
+
+    <Button
+        android:id="@+id/upB"
+        android:tag="up" />
+
+    <Button
+        android:id="@+id/volumeMuteB"
+        android:tag="volMute" />
+
+    <Button
+        android:id="@+id/volumeUpB"
+        android:tag="volUp" />
+
+    <Button
+        android:id="@+id/volumeDownB"
+        android:tag="volDown" />
+
+    <Button
+        android:id="@+id/mediaStopB"
+        android:tag="mediaStop" />
+
+    <Button
+        android:id="@+id/spaceB"
+        android:tag="space" />
+
+    <Button
+        android:id="@+id/enterB"
+        android:tag="enter" />
+
+    <Button
+        android:id="@+id/downB"
+        android:tag="down" />
+
+    <Button
+        android:id="@+id/rightB"
+        android:tag="right" />
+
+    <Button
+        android:id="@+id/leftB"
+        android:tag="left" />
+
+</GridLayout>

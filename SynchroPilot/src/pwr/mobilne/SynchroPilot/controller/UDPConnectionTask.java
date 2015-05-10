@@ -38,7 +38,8 @@ class UDPConnectionTask extends AsyncTask<String, Integer, Void> {
 			Log.i("ConnectionUDP", "Sending udp broadcast with " + 12345);
 			try {
 				packet = new DatagramPacket(localPortBytes, localPortBytes.length,
-						this.connectionController.getBroadcastAddress(), this.connectionController.UDPPORT);
+						ConnectionManager.getBroadcastAddress(connectionController.context),
+						this.connectionController.UDPPORT);
 				socket.send(packet);
 
 				byte[] buf = new byte[4];
