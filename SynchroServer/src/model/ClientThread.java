@@ -43,8 +43,8 @@ public class ClientThread extends Thread {
 
 			if (command.equals("volumeMute") || command.equals("volumeUp") || command.equals("volumeDown")
 					|| command.equals("mediaPlay") || command.equals("mediaStop") || command.equals("mediaPrev")
-					|| command.equals("mediaNext")) {
-
+					|| command.equals("mediaNext") || command.startsWith("sendText^,^")) {
+				Commander.getInstance().command(command);
 			} else if (command.equals("space")) {
 				robot.keyPress(KeyEvent.VK_SPACE);
 				robot.keyRelease(KeyEvent.VK_SPACE);
