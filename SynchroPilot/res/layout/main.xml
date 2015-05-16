@@ -3,59 +3,119 @@
     android:id="@+id/GridLayout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:columnCount="4"
+    android:alignmentMode="alignMargins"
+    android:columnCount="15"
     android:orientation="horizontal" >
 
     <Button
-        android:id="@+id/mediaPlayB"
-        android:tag="play" />
+        android:id="@+id/enterB"
+        android:layout_columnSpan="4"
+        android:layout_gravity="left"
+        android:layout_row="8"
+        android:tag="enter" />
 
     <Button
         android:id="@+id/mediaPrevB"
+        android:layout_column="3"
+        android:layout_columnSpan="5"
+        android:layout_gravity="left"
+        android:layout_row="0"
+        android:layout_rowSpan="2"
+        android:background="@drawable/ic_action_previous"
         android:tag="mediaPrev" />
 
+    <Space
+        android:layout_column="14"
+        android:layout_gravity="fill_vertical"
+        android:layout_row="16" />
+
     <Button
-        android:id="@+id/mediaNextB"
-        android:tag="mediaNext" />
+        android:id="@+id/leftB"
+        android:layout_column="3"
+        android:layout_gravity="left|bottom"
+        android:layout_row="16"
+        android:background="@drawable/ic_action_left"
+        android:tag="left" />
+
+    <Button
+        android:id="@+id/rightB"
+        android:layout_column="13"
+        android:layout_gravity="right|bottom"
+        android:layout_row="16"
+        android:background="@drawable/ic_action_right"
+        android:tag="right" />
+
+    <Button
+        android:id="@+id/downB"
+        android:layout_column="13"
+        android:layout_gravity="left|bottom"
+        android:layout_row="16"
+        android:background="@drawable/ic_action_down"
+        android:tag="down" />
 
     <Button
         android:id="@+id/upB"
+        android:layout_column="13"
+        android:layout_gravity="left|center_vertical"
+        android:layout_row="16"
+        android:background="@drawable/ic_action_up"
         android:tag="up" />
 
     <Button
+        android:id="@+id/volumeDownB"
+        android:layout_column="13"
+        android:layout_gravity="right|top"
+        android:layout_row="7"
+        android:background="@drawable/ic_action_volume_down"
+        android:tag="volDown" />
+
+    <Button
         android:id="@+id/volumeMuteB"
+        android:layout_column="13"
+        android:layout_gravity="right|top"
+        android:layout_row="4"
+        android:background="@drawable/ic_action_volume_muted"
         android:tag="volMute" />
 
     <Button
         android:id="@+id/volumeUpB"
+        android:layout_column="13"
+        android:layout_gravity="right|top"
+        android:layout_row="1"
+        android:background="@drawable/ic_action_volume_up"
         android:tag="volUp" />
 
     <Button
-        android:id="@+id/volumeDownB"
-        android:tag="volDown" />
+        android:id="@+id/mediaNextB"
+        android:layout_column="13"
+        android:layout_gravity="left|top"
+        android:layout_row="1"
+        android:background="@drawable/ic_action_next"
+        android:tag="mediaNext" />
+
+    <Button
+        android:id="@+id/mediaPlayB"
+        android:layout_column="9"
+        android:layout_gravity="left|center_vertical"
+        android:layout_row="1"
+        android:background="@drawable/ic_action_play"
+        android:tag="play" />
 
     <Button
         android:id="@+id/mediaStopB"
+        android:layout_width="50dp"
+        android:layout_height="42dp"
+        android:layout_column="9"
+        android:layout_gravity="left|top"
+        android:layout_row="4"
+        android:background="@drawable/ic_action_stop"
         android:tag="mediaStop" />
 
     <Button
         android:id="@+id/spaceB"
+        android:layout_column="9"
+        android:layout_gravity="left|top"
+        android:layout_row="8"
         android:tag="space" />
-
-    <Button
-        android:id="@+id/enterB"
-        android:tag="enter" />
-
-    <Button
-        android:id="@+id/downB"
-        android:tag="down" />
-
-    <Button
-        android:id="@+id/rightB"
-        android:tag="right" />
-
-    <Button
-        android:id="@+id/leftB"
-        android:tag="left" />
 
 </GridLayout>
