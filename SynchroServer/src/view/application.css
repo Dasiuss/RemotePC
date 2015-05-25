@@ -1,0 +1,31 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+.list-cell { /* <=== changed to even */
+    -fx-background-color: transparent;
+     
+}
+
+.list-cell:filled { /* <=== changed to even */
+    -fx-background-color: E1F041;
+    -fx-border-color: CFE3DC;
+   	-fx-border-radius: 5.0;
+    -fx-margin: 25;
+}
+
+#textMSG .list-cell{ /* <=== changed to even */
+    -fx-background-color: transparent;
+     
+}
+
+
+
+#textMSG .list-cell:filled { /* <=== changed to even */
+    -fx-background-color: #1B10E6;
+  
+   
+    -fx-text-fill: white;
+  	-fx-alignment: center-right;
+    -fx-border-insets: 0;
+    -fx-border-width: 2px;
+    -fx-border-color: CFE3DC CFE3DC CFE3DC CFE3DC;
+   
+}

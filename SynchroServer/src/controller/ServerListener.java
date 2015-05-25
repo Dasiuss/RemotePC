@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import view.Window;
 import model.ClientThread;
 
 public class ServerListener {
@@ -22,7 +23,7 @@ public class ServerListener {
 		}
 		while (true) {
 			try {
-				System.out.println("nasluchiwanie...");
+				System.out.println("nasluchiwsanie...");
 				client = server.accept();
 				ClientThread w = new ClientThread(client);
 				w.start();
@@ -33,6 +34,7 @@ public class ServerListener {
 	}
 
 	public static void main(String[] args) {
+		Window.startWindow(args);
 		new ServerListener();
 	}
 
