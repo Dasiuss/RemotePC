@@ -15,7 +15,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
@@ -24,10 +27,13 @@ public class SynchroService extends Service {
 	Socket server;
 	ObjectInputStream ois;
 	ObjectOutputStream oos;
-	FileInputStream fis;
+	
 	FileOutputStream fos;
-	DataInputStream dis;
-	DataOutputStream out;
+	
+	
+	Notification.Builder notificationBuilder;
+	Notification notification;
+	NotificationManager notificationManager;
 	
 	@Override
 	public IBinder onBind (Intent intent) {
@@ -51,11 +57,17 @@ public class SynchroService extends Service {
 		return START_STICKY;
 	}
 	
+	public void main () {
+		sendFile (new File ("ListOfFiles"));
+		while (true)
+		 react (readResponse ());
+	}
+	
 	public void sendFile (File file) {
 		try {
-			fis = new FileInputStream (file);
-			dis = new DataInputStream(fis);	
-			out = new DataOutputStream(server.getOutputStream());
+			FileInputStream fis = new FileInputStream (file);
+			DataInputStream dis = new DataInputStream(fis);	
+			DataOutputStream out = new DataOutputStream(server.getOutputStream());
 			byte[] buffor = new byte[1024];
 			int count;
 			while ((count = dis.read(buffor, 0, buffor.length)) > 0) {
@@ -99,10 +111,9 @@ public class SynchroService extends Service {
 	}
 	
 	public String readResponse () {
-		InputStream is;
 		String message;
 		try {
-			is = server.getInputStream();
+			InputStream is = server.getInputStream();
 	        InputStreamReader isr = new InputStreamReader (is);
 	        BufferedReader br = new BufferedReader (isr);
 	        message = br.readLine();
@@ -119,19 +130,50 @@ public class SynchroService extends Service {
 	public void react (String message) {
 		if  (message == "null") {
 			stopSelf ();
-			//TODO notification progress bar stop
+			updatePrograes (100);
 		}
 		if (message == "send") {
 			String fileName = readResponse ();
 			File f = new File (fileName); //TODO path to file
 			sendFile (f);
-			//TODO check for another message from server
 		}
 		if (message == "read") {
 			String fileName = readResponse ();
 			readFile (fileName);
-			//TODO chceck for another message from server
 		}
+	}
+	
+	public void updatePrograes (int progress) {
+		if (progress < 100) {
+			notificationBuilder.setProgress(100, progress, false);
+	
+			//Send the notification:
+			notification = notificationBuilder.build();
+			notificationManager.notify(100, notification);
+		} else {
+			notificationBuilder.setContentText ("Synchronizing complete");
+			notificationBuilder.setProgress(0, 0, false);
+			//Send the notification:
+			notification = notificationBuilder.build();
+			notificationManager.notify(100, notification);
+		}
+	}
+	
+	public void notificationProgressBar () {
+		Integer notificationID = 100;
+
+		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+		//Set notification information:
+		notificationBuilder = new Notification.Builder(getApplicationContext());
+		notificationBuilder.setOngoing(true)
+		                   .setContentTitle("Synchronizing")
+		                   .setContentText("Synchronizing in progress")
+		                   .setProgress(100, 0, false);
+
+		//Send the notification:
+		notification = notificationBuilder.build();
+		notificationManager.notify(notificationID, notification);
 	}
 
 }
