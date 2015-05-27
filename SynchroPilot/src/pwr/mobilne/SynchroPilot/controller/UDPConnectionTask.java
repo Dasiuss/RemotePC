@@ -46,12 +46,17 @@ class UDPConnectionTask extends AsyncTask<String, Integer, Void> {
 				packet = new DatagramPacket(buf, buf.length);// wait for response with ipaddress of server
 				socket.receive(packet);
 				String data = new String(packet.getData());
-				Log.i("ConnectionUDP", "received" + data);
 
 				Socket socket1 = new Socket();
-				socket1.connect(new InetSocketAddress(packet.getAddress().getHostAddress(), connectionController.PORT),
-						1000);
-				connectionController.setSocket(socket1);
+				socket1.connect(new InetSocketAddress(packet.getAddress().getHostAddress(),
+						connectionController.PILOT_PORT), 1000);
+				connectionController.setSocket(socket1, true);
+
+				Socket socket2 = new Socket();
+				socket2.connect(new InetSocketAddress(packet.getAddress().getHostAddress(),
+						connectionController.SYNCHRO_PORT), 1000);
+				connectionController.setSocket(socket2, false);
+
 				Log.i("ConnectionController", "Connected to " + packet.getAddress().getHostAddress() + "thanks to udp");
 			} catch (IOException e) {
 				e.printStackTrace();

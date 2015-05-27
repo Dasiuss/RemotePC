@@ -16,11 +16,12 @@ import android.util.Log;
  */
 public class ConnectionController {
 	private static ConnectionController instance = null;
-	public final int PORT = 9562;
+	public final int SYNCHRO_PORT = 9561;
+	public final int PILOT_PORT = 9562;
 	public final int UDPPORT = 9563;
-	private Socket socket = null;
+	private Socket pilotSocket = null;
+	private Socket synchroSocket = null;
 	private PrintWriter out;
-	@SuppressWarnings("unused")
 	private BufferedReader in;
 	Boolean socketReady = false;
 	public String lastFoundIp = "";
@@ -45,29 +46,35 @@ public class ConnectionController {
 	private void scanIPsForServer() {
 		String ip = ConnectionManager.getWifiIpAddress(context);
 		ip = ip.substring(0, ip.lastIndexOf("."));
-		for (int i = 1; i < 255 && socket == null; i++) {
+		for (int i = 1; i < 255 && pilotSocket == null; i++) {
 			new TCPConnectionTask(this).execute(ip + "." + i);
-			Log.i("ConnectionController", "task " + i);
 		}
 	}
 
-	protected synchronized void setSocket(Socket socket) {
+	protected synchronized void setSocket(Socket socket, boolean isForPilot) {
 		if (socket == null) return;
-		this.socket = socket;
-		lastFoundIp = socket.getInetAddress().getHostAddress();
-		try {
-			out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			socketReady = true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			socket = null;
+		if (isForPilot) {
+			this.pilotSocket = socket;
+			lastFoundIp = socket.getInetAddress().getHostAddress();
+			try {
+				out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"), true);
+				in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				socketReady = true;
+
+				new SocketListener(this).execute(in);
+
+			} catch (IOException e) {
+				e.printStackTrace();
+				socket = null;
+			}
+		} else {// for synchro
+			this.synchroSocket = socket;
 		}
 	}
 
 	public void closeSocket() {
 		try {
-			if (socket != null) socket.close();
+			if (pilotSocket != null) pilotSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -76,6 +83,10 @@ public class ConnectionController {
 	public static ConnectionController getInstance() {
 		if (instance == null) instance = new ConnectionController();
 		return instance;
+	}
+
+	public Socket getSynchroSocket() {
+		return synchroSocket;
 	}
 
 }

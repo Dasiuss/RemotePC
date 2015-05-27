@@ -4,12 +4,11 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 /**
  * call <code>new ConnectionTask().execute(ipAddress);</code>
  */
-public class TCPConnectionTask extends AsyncTask<String, Integer, Socket> {
+public class TCPConnectionTask extends AsyncTask<String, Integer, Void> {
 
 	/**
 	 * 
@@ -24,29 +23,28 @@ public class TCPConnectionTask extends AsyncTask<String, Integer, Socket> {
 	}
 
 	@Override
-	protected Socket doInBackground(String... params) {
+	protected Void doInBackground(String... params) {
 		Socket socket = null;
+		String host = params[0];
 		if (ConnectionController.getInstance().socketReady) {
 			this.cancel(false);
 		} else {
 
-			String host = params[0];
-			if ((socket = portIsOpen(host, this.connectionController.PORT, 100)) == null) this.cancel(false);
+			if ((socket = portIsOpen(host, this.connectionController.PILOT_PORT, 100)) == null) this.cancel(false);
 		}
-		return socket;
-	}
+		if (socket != null) {
+			this.connectionController.setSocket(socket, true);
 
-	@Override
-	protected void onPostExecute(Socket result) {
-		this.connectionController.setSocket(result);
+			if ((socket = portIsOpen(host, this.connectionController.SYNCHRO_PORT, 1000)) == null) return null;
+			this.connectionController.setSocket(socket, false);
+		}
+		return null;
 	}
 
 	public Socket portIsOpen(String ip, int port, int timeout) {
 		try {
-			Log.i("ConnectionController", "Connection try: " + ip);
 			Socket socket = new Socket();
 			socket.connect(new InetSocketAddress(ip, port), timeout);
-			Log.i("ConnectionController", "Connected to " + ip);
 			return socket;
 		} catch (Exception ex) {
 			return null;
