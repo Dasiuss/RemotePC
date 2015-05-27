@@ -67,7 +67,7 @@
         android:layout_gravity="right|top"
         android:layout_row="7"
         android:background="@drawable/ic_action_volume_down"
-        android:tag="volDown" />
+        android:tag="volumeDown" />
 
     <Button
         android:id="@+id/volumeMuteB"
@@ -75,7 +75,7 @@
         android:layout_gravity="right|top"
         android:layout_row="4"
         android:background="@drawable/ic_action_volume_muted"
-        android:tag="volMute" />
+        android:tag="volumeMute" />
 
     <Button
         android:id="@+id/volumeUpB"
@@ -83,7 +83,7 @@
         android:layout_gravity="right|top"
         android:layout_row="1"
         android:background="@drawable/ic_action_volume_up"
-        android:tag="volUp" />
+        android:tag="volumeUp" />
 
     <Button
         android:id="@+id/mediaNextB"
@@ -99,7 +99,7 @@
         android:layout_gravity="left|center_vertical"
         android:layout_row="1"
         android:background="@drawable/ic_action_play"
-        android:tag="play" />
+        android:tag="mediaPlay" />
 
     <Button
         android:id="@+id/mediaStopB"
