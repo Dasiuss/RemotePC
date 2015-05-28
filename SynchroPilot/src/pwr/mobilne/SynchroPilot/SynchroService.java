@@ -15,15 +15,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import pwr.mobilne.SynchroPilot.controller.ConnectionController;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 public class SynchroService extends Service {
 
+	ConnectionController con;
 	Socket server;
 	ObjectInputStream ois;
 	ObjectOutputStream oos;
@@ -43,8 +46,19 @@ public class SynchroService extends Service {
 	
 	@Override
 	public int onStartCommand (Intent intent, int flags, int StartId) {
-		// TODO connecting with server and saving it to socket
-		// TODO Do shit
+		con = ConnectionController.getInstance ();
+		con.prepareSocket(getApplicationContext());
+		while (con.isSocketReady()==false) {
+			try {
+				wait (15);
+				Log.d ("SynchroService", "Waiting for socket");
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		server = con.getSynchroSocket ();
+		main();
 		
 		/*
 		 * Order:
@@ -58,9 +72,10 @@ public class SynchroService extends Service {
 	}
 	
 	public void main () {
-		sendFile (new File ("ListOfFiles"));
+		sendFile (new File ("ListOfFiles"));//TODO file
 		while (true)
-		 react (readResponse ());
+			react (readResponse ());
+		
 	}
 	
 	public void sendFile (File file) {

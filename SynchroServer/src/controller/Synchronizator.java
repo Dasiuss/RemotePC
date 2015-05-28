@@ -14,7 +14,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-public class Synchronizator {
+public class Synchronizator extends Thread {
 	Socket application;
 	FileOutputStream fos;
 
@@ -22,6 +22,11 @@ public class Synchronizator {
 		this.application = app;
 	}
 
+	public void run () {
+		receiveFile ();
+		compare();
+	}
+	
 	public void receiveFile () {
 		byte [] mybytearray = new byte [65536]; // TODO size hardcoded, need to send file size
 		InputStream is;

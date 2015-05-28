@@ -89,4 +89,7 @@ public class ConnectionController {
 		return synchroSocket;
 	}
 
+	public boolean isSocketReady () {
+		return socketReady;
+	}
 }
