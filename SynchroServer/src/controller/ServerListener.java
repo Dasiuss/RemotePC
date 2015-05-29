@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import view.Window;
 import model.ClientThread;
 
 public class ServerListener {
@@ -20,7 +19,7 @@ public class ServerListener {
 		new UDPThread().start();
 		try {
 			server = new ServerSocket(PORT);
-			synchroServer = new ServerSocket (SYNCHRO_PORT);
+			synchroServer = new ServerSocket(SYNCHRO_PORT);
 		} catch (IOException ex) {
 			System.out.println("Port zajêty");
 			System.exit(-1);
@@ -31,8 +30,8 @@ public class ServerListener {
 				client = server.accept();
 				ClientThread w = new ClientThread(client);
 				w.start();
-				synchroClient = synchroServer.accept ();
-				Synchronizator s = new Synchronizator (synchroClient);
+				synchroClient = synchroServer.accept();
+				Synchronizator s = new Synchronizator(synchroClient);
 				s.start();
 			} catch (IOException ex) {
 				System.out.println("Nie mo¿na zaakceptowaæ");
@@ -41,7 +40,7 @@ public class ServerListener {
 	}
 
 	public static void main(String[] args) {
-		Window.startWindow(args);
+		// Window.startWindow(args);
 		new ServerListener();
 	}
 
