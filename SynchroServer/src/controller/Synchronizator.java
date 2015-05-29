@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -10,9 +11,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+
 
 public class Synchronizator extends Thread {
 	Socket application;
@@ -23,8 +26,9 @@ public class Synchronizator extends Thread {
 	}
 
 	public void run () {
-		receiveFile ();
-		compare();
+		System.out.println (readResponse ());
+		//receiveFile ();
+		//compare();
 	}
 	
 	public void receiveFile () {
@@ -52,6 +56,7 @@ public class Synchronizator extends Thread {
 	}
 
 	public void compare () {
+		System.out.println ("Comparing");
 		/*
 		 * TODO 1) Compare received file with list of existing files 
 		 * 		2) a) No differences: sendResponse ("null") 
@@ -98,5 +103,24 @@ public class Synchronizator extends Thread {
 			e.printStackTrace ();
 		}
 
+	}
+	
+	//----------------------------JUST FOR TESTS------------
+	public String readResponse () {
+		String message;
+		try {
+			System.out.println ("Synchronizator started listenig");
+			InputStream is = application.getInputStream();
+	        InputStreamReader isr = new InputStreamReader (is);
+	        BufferedReader br = new BufferedReader (isr);
+	        message = br.readLine();
+	        is.close ();
+	        isr.close ();
+	        br.close ();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "null";
+		}
+        return message;
 	}
 }

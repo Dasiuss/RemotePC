@@ -10,6 +10,8 @@
 	
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.SEND_SMS"/>
+	<uses-permission android:name="android.permission.READ_SMS" />
 	
     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
         <activity android:name="PilotActivity"
@@ -19,5 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+  			android:name="SynchroService"
+  		>
+		</service> 
     </application>
 </manifest>

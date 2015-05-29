@@ -3,6 +3,7 @@ package pwr.mobilne.SynchroPilot;
 import pwr.mobilne.SynchroPilot.controller.ConnectionController;
 import pwr.mobilne.SynchroPilot.model.PilotListener;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View.OnClickListener;
 
@@ -15,6 +16,7 @@ public class PilotActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		ConnectionController.getInstance().prepareSocket(getApplicationContext());
+		startService(new Intent(this, SynchroService.class));
 
 		pilotListener = new PilotListener();
 		findViewById(R.id.downB).setOnClickListener(pilotListener);

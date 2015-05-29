@@ -2,6 +2,7 @@ package pwr.mobilne.SynchroPilot;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -13,6 +14,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import pwr.mobilne.SynchroPilot.controller.ConnectionController;
@@ -48,7 +51,7 @@ public class SynchroService extends Service {
 	public int onStartCommand (Intent intent, int flags, int StartId) {
 		con = ConnectionController.getInstance ();
 		con.prepareSocket(getApplicationContext());
-		while (con.isSocketReady()==false) {
+		/*while (con.isSocketReady()==false) {
 			try {
 				wait (15);
 				Log.d ("SynchroService", "Waiting for socket");
@@ -56,8 +59,9 @@ public class SynchroService extends Service {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		}*/
 		server = con.getSynchroSocket ();
+		Log.i ("Serivce connection", "Service connected");
 		main();
 		
 		/*
@@ -72,9 +76,18 @@ public class SynchroService extends Service {
 	}
 	
 	public void main () {
-		sendFile (new File ("ListOfFiles"));//TODO file
+		sendResponse ("I'm working");
+		//try {
+		notificationProgressBar ();
+		//wait (5000);
+		updatePrograes (50);
+		//wait(5000);
+		updatePrograes (100);
+		//} catch (InterruptedException e) {e.printStackTrace ();}
+		/*sendFile (new File ("ListOfFiles"));//TODO file
 		while (true)
 			react (readResponse ());
+			*/
 		
 	}
 	
@@ -181,14 +194,29 @@ public class SynchroService extends Service {
 
 		//Set notification information:
 		notificationBuilder = new Notification.Builder(getApplicationContext());
-		notificationBuilder.setOngoing(true)
-		                   .setContentTitle("Synchronizing")
+		notificationBuilder.setContentTitle("Synchronizing")
 		                   .setContentText("Synchronizing in progress")
 		                   .setProgress(100, 0, false);
 
 		//Send the notification:
 		notification = notificationBuilder.build();
 		notificationManager.notify(notificationID, notification);
+	}
+	
+	//----------------------JUST FOR TESTS-------------
+	public void sendResponse (String message) { // send "null" "send" or "read" to app
+		//try {
+			//OutputStream os = server.getOutputStream ();
+			//OutputStreamWriter osw = new OutputStreamWriter (os);
+			//BufferedWriter bw = new BufferedWriter (osw);
+			//bw.write (message);
+			//os.close ();
+			//osw.close ();
+			//bw.close ();
+		//} catch (IOException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace ();
+		//}
 	}
 
 }
