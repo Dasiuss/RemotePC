@@ -21,7 +21,7 @@ func interpret($command)
 	ElseIf $command="mediaPrev" Then
 		Send("{media_prev}")
 	ElseIf $command="mediaNext" Then
-		Send("{media_prev}")
+		Send("{media_next}")
 	ElseIf $command="ShutDown" Then
 		Shutdown(9)
 	Else
