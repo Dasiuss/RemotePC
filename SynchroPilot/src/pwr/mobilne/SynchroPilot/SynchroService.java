@@ -2,7 +2,6 @@ package pwr.mobilne.SynchroPilot;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -14,9 +13,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.channels.AsynchronousCloseException;
 
 import pwr.mobilne.SynchroPilot.controller.ConnectionController;
 import android.app.Notification;
@@ -24,6 +23,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -35,6 +35,8 @@ public class SynchroService extends Service {
 	ObjectOutputStream oos;
 
 	FileOutputStream fos;
+	BufferedReader in;
+	PrintWriter out;
 
 	Notification.Builder notificationBuilder;
 	Notification notification;
@@ -59,7 +61,14 @@ public class SynchroService extends Service {
 		}
 		server = con.getSynchroSocket();
 		Log.i("Serivce connection", "Service connected");
-		main();
+		try {
+			out = new PrintWriter(server.getOutputStream(),true);  
+			in = new BufferedReader(new InputStreamReader(server.getInputStream()));
+			Log.d ("Service started", "Streams creation complete");
+			main();
+		}catch (IOException e) {
+			e.printStackTrace ();
+		}
 
 		/*
 		 * Order: 1) Send file with files paths and last update date 2) Read respons which is: a) null - everything is
@@ -70,7 +79,9 @@ public class SynchroService extends Service {
 	}
 
 	public void main() {
-		sendResponse("I'm working");
+		Task t = new Task ();
+		t.execute (in);
+		//System.out.println (readResponse ());
 		// try {
 		notificationProgressBar();
 		// wait (5000);
@@ -131,26 +142,30 @@ public class SynchroService extends Service {
 	}
 
 	public String readResponse() {
-		String message;
+		String message = "null";
 		try {
-			InputStream is = server.getInputStream();
-			InputStreamReader isr = new InputStreamReader(is);
-			BufferedReader br = new BufferedReader(isr);
-			message = br.readLine();
-			is.close();
-			isr.close();
-			br.close();
+			while (in.ready () == false) {
+				Thread.sleep (1000);
+			}
+			message = in.readLine();
+			Log.d ("Servce readResponse", "Message received");
 		} catch (IOException e) {
+			Log.e ("No kurwa error", "IOException");
+			e.printStackTrace ();
+			return message;
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return "null";
 		}
-		return message;
+        return message;
 	}
 
-	public void react(String message) {
+	public void react(String message) throws IOException {
 		if (message == "null") {
-			stopSelf();
+			in.close ();
+			out.close ();
 			updatePrograes(100);
+			stopSelf();
 		}
 		if (message == "send") {
 			String fileName = readResponse();
@@ -196,19 +211,35 @@ public class SynchroService extends Service {
 
 	// ----------------------JUST FOR TESTS-------------
 	public void sendResponse(String message) { // send "null" "send" or "read" to app
-		try {
-			OutputStream os = server.getOutputStream();
-			OutputStreamWriter osw = new OutputStreamWriter(os);
-			BufferedWriter bw = new BufferedWriter(osw);
-			bw.write(message);
-			bw.flush();
-			os.close();
-			osw.close();
-			bw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		out.println(message);
 	}
 
+	
+	class Task extends AsyncTask <BufferedReader, Void, Void> {
+
+		@Override
+		protected Void doInBackground (BufferedReader... params) {
+			BufferedReader in = params [0];
+			Log.d ("ASYNCTASK", "doInBackground started");
+				String message = "null";
+				try {
+					while (in.ready () == false) {
+						Thread.sleep (1000);
+					}
+					message = in.readLine();
+					Log.d ("Servce readResponse", "Message received");
+				} catch (IOException e) {
+					Log.e ("No kurwa error", "IOException");
+					e.printStackTrace ();
+					
+				} catch (InterruptedException e) {
+					Log.e ("No kurwa error", "InterruptedException");
+					e.printStackTrace();
+				}
+		        System.out.println (message);
+			
+			return null;
+		}
+		
+	}
 }

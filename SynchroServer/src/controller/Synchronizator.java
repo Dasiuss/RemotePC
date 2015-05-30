@@ -14,19 +14,28 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 
 public class Synchronizator extends Thread {
 	Socket application;
 	FileOutputStream fos;
+	PrintWriter out;
+	BufferedReader in;
 
 	public Synchronizator (Socket app) {
-		this.application = app;
+		try {
+			this.application = app;
+			out = new PrintWriter(application.getOutputStream(),true);  
+			in = new BufferedReader(new InputStreamReader(application.getInputStream()));
+		}catch (IOException e) {
+			System.out.println ("Synchronizator construct error - IOException");
+		}
 	}
 
 	public void run () {
-		System.out.println (readResponse ());
+		sendResponse ("Yupikaei motherfucker");
 		//receiveFile ();
 		//compare();
 	}
@@ -67,18 +76,7 @@ public class Synchronizator extends Thread {
 	}
 
 	public void sendResponse (String message) { // send "null" "send" or "read" to app
-		try {
-			OutputStream os = application.getOutputStream ();
-			OutputStreamWriter osw = new OutputStreamWriter (os);
-			BufferedWriter bw = new BufferedWriter (osw);
-			bw.write (message);
-			os.close ();
-			osw.close ();
-			bw.close ();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace ();
-		}
+		out.println(message);
 	}
 
 	public void sendFile (File file) {
@@ -109,14 +107,7 @@ public class Synchronizator extends Thread {
 	public String readResponse () {
 		String message;
 		try {
-			System.out.println ("Synchronizator started listenig");
-			InputStream is = application.getInputStream();
-	        InputStreamReader isr = new InputStreamReader (is);
-	        BufferedReader br = new BufferedReader (isr);
-	        message = br.readLine();
-	        is.close ();
-	        isr.close ();
-	        br.close ();
+			message = in.readLine();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return "null";
