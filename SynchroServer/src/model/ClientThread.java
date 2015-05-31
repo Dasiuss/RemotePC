@@ -12,6 +12,8 @@ import java.util.Scanner;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
+import view.Layout;
+
 public class ClientThread extends Thread {
 
 	private Socket client;
@@ -24,6 +26,7 @@ public class ClientThread extends Thread {
 
 	@Override
 	public void run() {
+		Layout l = new Layout();
 		try {
 			in = new Scanner(client.getInputStream(), "UTF-8");
 			out = new PrintStream(client.getOutputStream());
@@ -85,10 +88,10 @@ public class ClientThread extends Thread {
 			} else {
 				JSONObject json = (JSONObject) JSONValue.parse(command);
 				if (json.containsKey("inbox")) {
-					// view.Layout.setSMS(json);
+					view.Layout.setSMS(json);
 				} else if (json.containsKey("contactsJson")) {
 					json.remove("contactsJson");
-					// view.Layout.setContacts(json);
+					view.Layout.setContacts(json);
 				}
 				System.out.println("nierozpoznano polecenia " + command);
 			}

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import view.Layout;
 import model.ClientThread;
 import model.UDPClientThread;
 
@@ -28,7 +29,9 @@ public class ServerListener {
 			System.out.println("Port zajêty");
 			System.exit(-1);
 		}
+		
 		while (true) {
+			
 			try {
 				System.out.println("nasluchiwsanie...");
 				client = server.accept();
@@ -44,8 +47,8 @@ public class ServerListener {
 	}
 
 	public static void main(String[] args) {
-		// Window.startWindow(args);
 		new ServerListener();
+		
 	}
 
 	public static ServerListener getInstance() {
