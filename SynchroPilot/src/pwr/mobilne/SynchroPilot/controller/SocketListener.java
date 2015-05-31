@@ -92,6 +92,7 @@ class SocketListener extends AsyncTask<BufferedReader, Void, Void> {
 			json.put(phoneNumber, name);
 		}
 		phones.close();
+		json.put("contactsJson", "1");
 		return json;
 	}
 

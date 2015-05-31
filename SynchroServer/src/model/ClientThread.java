@@ -1,7 +1,10 @@
 package model;
 
 import java.awt.AWTException;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.Robot;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -42,12 +45,14 @@ public class ClientThread extends Thread {
 
 		while (!client.isClosed() && in.hasNextLine()) {
 			String command = in.nextLine();
+			command = command.split("\n")[0];
+			command = command.split("\r")[0];
 			System.out.println(command);
 
 			if (command.equals("volumeMute") || command.equals("volumeUp") || command.equals("volumeDown")
 					|| command.equals("mediaPlay") || command.equals("mediaStop") || command.equals("mediaPrev")
 					|| command.equals("mediaNext") || command.startsWith("sendText^,^")) {
-				Commander.getInstance().command(command);
+				Commander.getInstance().command(command + ";");
 			} else if (command.equals("space")) {
 				robot.keyPress(KeyEvent.VK_SPACE);
 				robot.keyRelease(KeyEvent.VK_SPACE);
@@ -66,6 +71,30 @@ public class ClientThread extends Thread {
 			} else if (command.equals("right")) {
 				robot.keyPress(KeyEvent.VK_RIGHT);
 				robot.keyRelease(KeyEvent.VK_RIGHT);
+			} else if (command.equals("lpm")) {
+				robot.mousePress(InputEvent.BUTTON1_MASK);
+				robot.mouseRelease(InputEvent.BUTTON1_MASK);
+			} else if (command.equals("ppm")) {
+				robot.mousePress(InputEvent.BUTTON3_MASK);
+				robot.mouseRelease(InputEvent.BUTTON3_MASK);
+			} else if (command.equals("spm")) {
+				robot.mousePress(InputEvent.BUTTON2_MASK);
+				robot.mouseRelease(InputEvent.BUTTON2_MASK);
+			} else if (command.equals("scrollDown")) {
+				robot.mouseWheel(1);
+			} else if (command.equals("scrollUp")) {
+				robot.mouseWheel(-1);
+			} else if (command.startsWith("move;")) {
+				String[] coords = command.split(";");
+				Point mousePos = MouseInfo.getPointerInfo().getLocation();
+				try {
+					int newCoordX = mousePos.x + Integer.parseInt(coords[1]);
+					int newCoordY = mousePos.y + Integer.parseInt(coords[2]);
+					robot.mouseMove(newCoordX, newCoordY);
+					System.out.println("moving from " + mousePos.x + " to +" + coords[1]);
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
 			} else {
 				JSONObject json = (JSONObject) JSONValue.parse(command);
 				if (json.containsKey("inbox")) {

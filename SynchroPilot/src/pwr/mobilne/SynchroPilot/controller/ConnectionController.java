@@ -29,7 +29,11 @@ public class ConnectionController {
 	Context context;
 
 	public synchronized void sendToSocket(String msg) {
-		if (socketReady) out.println(msg);
+		if (socketReady) {
+			out.println(msg);
+		} else {
+			prepareSocket(context);
+		}
 	}
 
 	public void prepareSocket(Context context) {
@@ -89,7 +93,7 @@ public class ConnectionController {
 		return synchroSocket;
 	}
 
-	public boolean isSocketReady () {
+	public boolean isSocketReady() {
 		return socketReady;
 	}
 }

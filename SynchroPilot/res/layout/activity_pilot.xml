@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/GridLayout1"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:alignmentMode="alignMargins"
@@ -8,114 +8,155 @@
     android:orientation="horizontal" >
 
     <Button
-        android:id="@+id/enterB"
-        android:layout_columnSpan="4"
-        android:layout_gravity="left"
-        android:layout_row="8"
-        android:tag="enter" />
-
-    <Button
-        android:id="@+id/mediaPrevB"
-        android:layout_column="3"
-        android:layout_columnSpan="5"
-        android:layout_gravity="left"
-        android:layout_row="0"
-        android:layout_rowSpan="2"
-        android:background="@drawable/ic_action_previous"
-        android:tag="mediaPrev" />
-
-    <Space
-        android:layout_column="14"
-        android:layout_gravity="fill_vertical"
-        android:layout_row="16" />
-
-    <Button
-        android:id="@+id/leftB"
-        android:layout_column="3"
-        android:layout_gravity="left|bottom"
-        android:layout_row="16"
-        android:background="@drawable/ic_action_left"
-        android:tag="left" />
-
-    <Button
-        android:id="@+id/rightB"
-        android:layout_column="13"
-        android:layout_gravity="right|bottom"
-        android:layout_row="16"
-        android:background="@drawable/ic_action_right"
-        android:tag="right" />
-
-    <Button
-        android:id="@+id/downB"
-        android:layout_column="13"
-        android:layout_gravity="left|bottom"
-        android:layout_row="16"
-        android:background="@drawable/ic_action_down"
-        android:tag="down" />
-
-    <Button
-        android:id="@+id/upB"
-        android:layout_column="13"
-        android:layout_gravity="left|center_vertical"
-        android:layout_row="16"
-        android:background="@drawable/ic_action_up"
-        android:tag="up" />
-
-    <Button
-        android:id="@+id/volumeDownB"
-        android:layout_column="13"
-        android:layout_gravity="right|top"
-        android:layout_row="7"
-        android:background="@drawable/ic_action_volume_down"
-        android:tag="volumeDown" />
-
-    <Button
         android:id="@+id/volumeMuteB"
-        android:layout_column="13"
-        android:layout_gravity="right|top"
-        android:layout_row="4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:background="@drawable/ic_action_volume_muted"
         android:tag="volumeMute" />
 
     <Button
         android:id="@+id/volumeUpB"
-        android:layout_column="13"
-        android:layout_gravity="right|top"
-        android:layout_row="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/volumeMuteB"
+        android:layout_alignParentRight="true"
         android:background="@drawable/ic_action_volume_up"
         android:tag="volumeUp" />
 
     <Button
-        android:id="@+id/mediaNextB"
-        android:layout_column="13"
-        android:layout_gravity="left|top"
-        android:layout_row="1"
-        android:background="@drawable/ic_action_next"
-        android:tag="mediaNext" />
+        android:id="@+id/volumeDownB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/volumeMuteB"
+        android:background="@drawable/ic_action_volume_down"
+        android:tag="volumeDown" />
+
+    <Button
+        android:id="@+id/spaceB"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:tag="space"
+        android:text="space" />
+
+    <Button
+        android:id="@+id/downB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/spaceB"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/ic_action_down"
+        android:height="80dp"
+        android:tag="down"
+        android:width="100dp" />
+
+    <Button
+        android:id="@+id/upB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/downB"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/ic_action_up"
+        android:height="80dp"
+        android:tag="up"
+        android:width="80dp" />
+
+    <Button
+        android:id="@+id/rightB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/spaceB"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/downB"
+        android:background="@drawable/ic_action_right"
+        android:height="80dp"
+        android:tag="right"
+        android:width="80dp" />
+
+    <Button
+        android:id="@+id/leftB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/spaceB"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/downB"
+        android:background="@drawable/ic_action_left"
+        android:height="80dp"
+        android:tag="left"
+        android:width="80dp" />
+
+    <Button
+        android:id="@+id/enterB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/upB"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/enter"
+        android:height="80dp"
+        android:tag="enter"
+        android:width="80dp" />
+
+    <Button
+        android:id="@+id/touchpad"
+        android:tag="touchpad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/volumeDownB"
+        android:layout_toLeftOf="@+id/volumeDownB"
+        android:layout_toRightOf="@+id/upB"
+        android:background="@drawable/touchpad" />
 
     <Button
         android:id="@+id/mediaPlayB"
-        android:layout_column="9"
-        android:layout_gravity="left|center_vertical"
-        android:layout_row="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:height="60dp"
+        android:width="60dp"
         android:background="@drawable/ic_action_play"
         android:tag="mediaPlay" />
 
     <Button
-        android:id="@+id/mediaStopB"
-        android:layout_width="50dp"
-        android:layout_height="42dp"
-        android:layout_column="9"
-        android:layout_gravity="left|top"
-        android:layout_row="4"
-        android:background="@drawable/ic_action_stop"
-        android:tag="mediaStop" />
+        android:id="@+id/mediaPrevB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mediaPlayB"
+        android:layout_toLeftOf="@+id/mediaPlayB"
+        android:background="@drawable/ic_action_previous"
+        android:height="60dp"
+        android:tag="mediaPrev"
+        android:width="60dp" />
 
     <Button
-        android:id="@+id/spaceB"
-        android:layout_column="9"
-        android:layout_gravity="left|top"
-        android:layout_row="8"
-        android:tag="space" />
+        android:id="@+id/mediaNextB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mediaPlayB"
+        android:layout_toRightOf="@+id/mediaPlayB"
+        android:background="@drawable/ic_action_next"
+        android:height="60dp"
+        android:tag="mediaNext"
+        android:width="60dp" />
 
-</GridLayout>
+    <Button
+        android:id="@+id/mediaStopB"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/mediaPlayB"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/ic_action_stop"
+        android:height="20dp"
+        android:tag="mediaStop"
+        android:width="20dp" />
+
+</RelativeLayout>

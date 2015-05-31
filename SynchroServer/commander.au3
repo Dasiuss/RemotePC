@@ -1,13 +1,19 @@
 
 while(true)
 	$read = ConsoleRead()
-	if $read <> "" then interpret($read)
+	if $read <> "" then
+		$commands = StringSplit($read,";")
+		for $i = 1 to UBound($commands)-1
+			interpret($commands[$i])
+		Next
+	EndIf
 	Sleep(100)
 WEnd
 
 
 func interpret($command)
 	$command = StringStripCR(StringStripWS($command,3))
+	if $command = "" then Return
 	if $command="volumeMute" then
 		Send("{VOLUME_MUTE}")
 	ElseIf $command="volumeDown" Then

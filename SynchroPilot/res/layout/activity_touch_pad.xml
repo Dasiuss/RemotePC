@@ -1,0 +1,91 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="pwr.mobilne.SynchroPilot.TouchPadActivity" >
+
+    <TextView
+        android:id="@+id/touchpadSurface"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/sendText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center_horizontal"
+        android:tag="lpm"
+        android:text="touchpad" />
+
+    <Button
+        android:id="@+id/ppm"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:tag="ppm"
+        android:text="ppm" />
+
+    <Button
+        android:id="@+id/lpm"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:tag="lpm"
+        android:text="lpm" />
+
+    <Button
+        android:id="@+id/roll"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:tag="spm"
+        android:text="▲▼" />
+
+    <Button
+        android:id="@+id/enter"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/lpm"
+        android:tag="enter"
+        android:text="enter" />
+
+    <Button
+        android:id="@+id/send"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/esc"
+        android:layout_toRightOf="@+id/enter"
+        android:text="send ↑" />
+
+    <Button
+        android:id="@+id/esc"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/ppm"
+        android:tag="esc"
+        android:text="esc" />
+
+    <EditText
+        android:id="@+id/sendText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/send"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:hint="send text"
+        android:inputType="textMultiLine" >
+
+        <requestFocus />
+    </EditText>
+
+</RelativeLayout>

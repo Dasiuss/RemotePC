@@ -2,23 +2,26 @@ package pwr.mobilne.SynchroPilot;
 
 import pwr.mobilne.SynchroPilot.controller.ConnectionController;
 import pwr.mobilne.SynchroPilot.model.PilotListener;
+import pwr.mobilne.SynchroPilot.model.TouchListener;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View.OnClickListener;
 
 public class PilotActivity extends Activity {
 	private OnClickListener pilotListener;
+	private TouchListener touchListener;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.activity_pilot);
 		ConnectionController.getInstance().prepareSocket(getApplicationContext());
-		startService(new Intent(this, SynchroService.class));
+		// startService(new Intent(this, SynchroService.class));
 
-		pilotListener = new PilotListener();
+		pilotListener = PilotListener.getInstance();
+		touchListener = TouchListener.getInstance();
+
 		findViewById(R.id.downB).setOnClickListener(pilotListener);
 		findViewById(R.id.enterB).setOnClickListener(pilotListener);
 		findViewById(R.id.leftB).setOnClickListener(pilotListener);
@@ -32,5 +35,9 @@ public class PilotActivity extends Activity {
 		findViewById(R.id.volumeDownB).setOnClickListener(pilotListener);
 		findViewById(R.id.volumeMuteB).setOnClickListener(pilotListener);
 		findViewById(R.id.volumeUpB).setOnClickListener(pilotListener);
+		findViewById(R.id.touchpad).setOnClickListener(pilotListener);
+		findViewById(R.id.volumeDownB).setOnTouchListener(touchListener);
+		findViewById(R.id.volumeMuteB).setOnTouchListener(touchListener);
+		findViewById(R.id.volumeUpB).setOnTouchListener(touchListener);
 	}
 }
