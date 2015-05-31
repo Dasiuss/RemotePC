@@ -8,6 +8,7 @@ import model.ClientThread;
 import model.UDPClientThread;
 
 public class ServerListener {
+	private static ServerListener instance = null;
 	public final int PORT = 9562;
 	public final int SYNCHRO_PORT = 9561;
 
@@ -15,6 +16,7 @@ public class ServerListener {
 	public ServerSocket synchroServer = null;
 	public Socket client = null;
 	public Socket synchroClient = null;
+	public ClientThread clientThread;
 
 	public ServerListener() {
 		new UDPThreadConnector().start();
@@ -30,8 +32,8 @@ public class ServerListener {
 			try {
 				System.out.println("nasluchiwsanie...");
 				client = server.accept();
-				ClientThread w = new ClientThread(client);
-				w.start();
+				clientThread = new ClientThread(client);
+				clientThread.start();
 				synchroClient = synchroServer.accept();
 				Synchronizator s = new Synchronizator(synchroClient);
 				s.start();
@@ -46,4 +48,7 @@ public class ServerListener {
 		new ServerListener();
 	}
 
+	public static ServerListener getInstance() {
+		return instance;
+	}
 }
