@@ -8,6 +8,9 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
 
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+
 public class ClientThread extends Thread {
 
 	private Socket client;
@@ -64,6 +67,12 @@ public class ClientThread extends Thread {
 				robot.keyPress(KeyEvent.VK_RIGHT);
 				robot.keyRelease(KeyEvent.VK_RIGHT);
 			} else {
+				JSONObject json = (JSONObject) JSONValue.parse(command);
+				if (json.containsKey("inbox")) {
+					// TODO tu wywo³aj swoj¹ metodê Mateusz
+				} else if (json.containsKey("contactsJson")) {
+					// TODO tu wywo³aj inn¹ swoj¹ metodê Mateusz
+				}
 				System.out.println("nierozpoznano polecenia " + command);
 			}
 		}
