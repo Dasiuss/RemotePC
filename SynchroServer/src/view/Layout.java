@@ -37,17 +37,17 @@ public class Layout {
 	private static Map<String, String> contacts = new HashMap<>();
 	private static Map<String, ArrayList<JSONObject>> listofTextPerUser = new HashMap<>();
 	private static JSONObject SMS = new JSONObject();
-	ClientThread ct ;
+	ClientThread ct;
 	ServerListener sl;
-	
-	public Layout(){
+
+	public Layout() {
 		sl = ServerListener.getInstance();
-		ct = new ClientThread(sl.client);
+		ct = sl.clientThread;
 		ct.getContacts();
 		ct.getSMS();
 		initialize();
 	}
-	
+
 	/**
 	 * Launch the application.
 	 * 
@@ -56,6 +56,7 @@ public class Layout {
 	@SuppressWarnings("unchecked")
 	public static void getLayout() {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					Layout window = new Layout();
@@ -89,8 +90,6 @@ public class Layout {
 		}
 	}
 
- 
-
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -121,7 +120,7 @@ public class Layout {
 		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		frame.getContentPane().add(scrollPane_1);
 
-		JTextArea textArea = new JTextArea();
+		final JTextArea textArea = new JTextArea();
 		scrollPane_1.setViewportView(textArea);
 		textArea.setLineWrap(true);
 
@@ -140,7 +139,7 @@ public class Layout {
 		JScrollPane scrollPane_2 = new JScrollPane();
 		scrollPane_2.setBounds(656, 51, 118, 254);
 		frame.getContentPane().add(scrollPane_2);
-		JList list = new JList(data);
+		final JList list = new JList(data);
 		scrollPane_2.setViewportView(list);
 
 		list.addListSelectionListener(new ListSelectionListener() {
@@ -161,7 +160,7 @@ public class Layout {
 				String msg = textArea.getText();
 				String date = Calendar.getInstance().getTimeInMillis() + "";
 				JSONObject json = new JSONObject();
-				
+
 				json.put("body", msg);
 				json.put("date_sent", date);
 				String address = getByVal((String) list.getSelectedValue());
@@ -175,7 +174,7 @@ public class Layout {
 				addSentMSG(json, person);
 			}
 		});
-
+		frame.setVisible(true);
 	}
 
 	private String getByVal(String val) {
@@ -190,10 +189,10 @@ public class Layout {
 		List<JSONObject> texts = listofTextPerUser.get(contact);
 		for (JSONObject l : texts) {
 			if (l.get("sent").equals("true")) {
-				//add to sent section
+				// add to sent section
 				addSentMSG(l, contact);
 			} else {
-				//add to recived section
+				// add to recived section
 				addRecivedMSG(l);
 			}
 		}
@@ -239,9 +238,10 @@ public class Layout {
 	}
 
 	private static JSONObject[] getInbox(JSONObject json) {
+
 		JSONArray inboxArray = (JSONArray) json.get("inbox");
-		//teraz mam tablice smsow
-		//chce wyciagnaæ pojedyncze smsy i w³o¿yæ je do tablicy jsonow
+		// teraz mam tablice smsow
+		// chce wyciagnaæ pojedyncze smsy i w³o¿yæ je do tablicy jsonow
 		JSONObject[] arrayofJSON = new JSONObject[inboxArray.size()];
 
 		for (int i = 0; i < inboxArray.size(); i++) {
@@ -254,8 +254,8 @@ public class Layout {
 	private static JSONObject[] getSended(JSONObject json) {
 
 		JSONArray inboxArray = (JSONArray) json.get("sent");
-		//teraz mam tablice smsow
-		//chce wyciagnaæ pojedyncze smsy i w³o¿yæ je do tablicy jsonow
+		// teraz mam tablice smsow
+		// chce wyciagnaæ pojedyncze smsy i w³o¿yæ je do tablicy jsonow
 
 		JSONObject[] arrayofJSON = new JSONObject[inboxArray.size()];
 
@@ -266,8 +266,8 @@ public class Layout {
 		return arrayofJSON;
 
 	}
-	
-	public void sendSMS(String number, String message){
+
+	public void sendSMS(String number, String message) {
 		ct.sendSMS(number, message);
 	}
 
