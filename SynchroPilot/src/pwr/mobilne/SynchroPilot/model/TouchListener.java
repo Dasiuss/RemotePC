@@ -2,6 +2,8 @@ package pwr.mobilne.SynchroPilot.model;
 
 import pwr.mobilne.SynchroPilot.R;
 import pwr.mobilne.SynchroPilot.controller.ConnectionController;
+import android.content.Context;
+import android.os.Vibrator;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -13,6 +15,8 @@ public class TouchListener implements OnTouchListener {
 	private float oldX;
 	private float oldY;
 	private boolean moved;
+	Vibrator vibrator = null;
+	private int vibrateTime = 15;
 
 	public static TouchListener getInstance() {
 		if (instance == null) instance = new TouchListener();
@@ -38,24 +42,31 @@ public class TouchListener implements OnTouchListener {
 				int diffX = (int) (x - oldX);
 				int diffY = (int) (y - oldY);
 				if (diffX != 0 || diffY != 0) moved = true;
-				con.sendToSocket("move;" + diffX + ";" + diffY + ";");
+				con.sendToUDPSocket("move;" + diffX + ";" + diffY + ";");
 				oldX = x;
 				oldY = y;
-			} else if (v.getId() == R.id.roll) {
-				if (diff > 5) {
-					con.sendToSocket("scrollUp");
-					oldY = y;
-				} else if (diff < -5) {
-					con.sendToSocket("scrollDown");
-					oldY = y;
-				}
-			} else if (v.getId() == R.id.volumeDownB || v.getId() == R.id.volumeUpB || v.getId() == R.id.volumeMuteB) {
-				if (diff > 5) {
-					con.sendToSocket("volumeDown");
-					oldY = y;
-				} else if (diff < -5) {
-					con.sendToSocket("volumeUp");
-					oldY = y;
+			} else {
+				if (v.getId() == R.id.roll) {
+					if (diff > 15) {
+						con.sendToUDPSocket("scrollUp;");
+						vibrator.vibrate(vibrateTime);
+						oldY = y;
+					} else if (diff < -15) {
+						con.sendToUDPSocket("scrollDown;");
+						vibrator.vibrate(vibrateTime);
+						oldY = y;
+					}
+				} else if (v.getId() == R.id.volumeDownB || v.getId() == R.id.volumeUpB
+						|| v.getId() == R.id.volumeMuteB) {
+					if (diff > 15) {
+						con.sendToUDPSocket("volumeDown;");
+						vibrator.vibrate(vibrateTime);
+						oldY = y;
+					} else if (diff < -15) {
+						con.sendToUDPSocket("volumeUp;");
+						vibrator.vibrate(vibrateTime);
+						oldY = y;
+					}
 				}
 			}
 			break;
@@ -65,5 +76,9 @@ public class TouchListener implements OnTouchListener {
 			break;
 		}
 		return true;
+	}
+
+	public void setContext(Context context) {
+		vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 	}
 }

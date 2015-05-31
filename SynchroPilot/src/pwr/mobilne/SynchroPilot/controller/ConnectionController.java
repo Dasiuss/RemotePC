@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 import android.content.Context;
 import android.util.Log;
@@ -18,7 +21,8 @@ public class ConnectionController {
 	private static ConnectionController instance = null;
 	public final int SYNCHRO_PORT = 9561;
 	public final int PILOT_PORT = 9562;
-	public final int UDPPORT = 9563;
+	public final int UDPCONNECTIONPORT = 9563;
+	public final int UDPPORT = 9564;
 	private Socket pilotSocket = null;
 	private Socket synchroSocket = null;
 	private PrintWriter out;
@@ -26,7 +30,28 @@ public class ConnectionController {
 	Boolean socketReady = false;
 	public String lastFoundIp = "";
 
+	private DatagramPacket sendPacket;
 	Context context;
+	private DatagramSocket UDPSocket;
+
+	public synchronized void sendToUDPSocket(String msg) {
+		try {
+			sendPacket.setData(msg.getBytes("UTF-8"));
+			new Thread() {
+				@Override
+				public void run() {
+					try {
+						UDPSocket.send(sendPacket);
+					} catch (IOException e) {
+						prepareSocket(context);
+						e.printStackTrace();
+					}
+				}
+			}.start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public synchronized void sendToSocket(String msg) {
 		if (socketReady) {
@@ -58,6 +83,13 @@ public class ConnectionController {
 	protected synchronized void setSocket(Socket socket, boolean isForPilot) {
 		if (socket == null) return;
 		if (isForPilot) {
+			try {
+				UDPSocket = new DatagramSocket();
+				sendPacket = new DatagramPacket(new byte[1024], 1024, socket.getInetAddress(), UDPPORT);
+			} catch (SocketException e1) {
+				e1.printStackTrace();
+			}
+
 			this.pilotSocket = socket;
 			lastFoundIp = socket.getInetAddress().getHostAddress();
 			try {

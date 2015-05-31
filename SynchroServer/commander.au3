@@ -35,7 +35,7 @@ func interpret($command)
 		if $com[1]="sendText" Then
 			Send($com[2])
 		Else
-			MsgBox(0,0,$command)
+			;MsgBox(0,0,$command)
 		EndIf
 	EndIf
 EndFunc

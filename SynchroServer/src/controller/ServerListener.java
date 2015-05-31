@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import model.ClientThread;
+import model.UDPClientThread;
 
 public class ServerListener {
 	public final int PORT = 9562;
@@ -16,7 +17,8 @@ public class ServerListener {
 	public Socket synchroClient = null;
 
 	public ServerListener() {
-		new UDPThread().start();
+		new UDPThreadConnector().start();
+		new UDPClientThread().start();
 		try {
 			server = new ServerSocket(PORT);
 			synchroServer = new ServerSocket(SYNCHRO_PORT);

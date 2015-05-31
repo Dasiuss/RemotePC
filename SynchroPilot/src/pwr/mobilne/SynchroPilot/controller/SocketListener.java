@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.telephony.SmsManager;
+import android.util.Log;
 
 @SuppressWarnings("unchecked")
 class SocketListener extends AsyncTask<BufferedReader, Void, Void> {
@@ -39,9 +40,11 @@ class SocketListener extends AsyncTask<BufferedReader, Void, Void> {
 			try {
 				while (in.ready()) {
 					String read = in.readLine();
+					Log.i("socket event", read);
 					JSONObject json = (JSONObject) JSONValue.parse(read);
 
 					if (json.containsKey("sendSMS")) {
+						Log.i("socket event", "sending");
 						SmsManager sms = SmsManager.getDefault();
 						sms.sendTextMessage((String) json.get("number"), null, (String) json.get("message"), null, null);
 

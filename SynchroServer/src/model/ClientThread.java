@@ -1,8 +1,6 @@
 package model;
 
 import java.awt.AWTException;
-import java.awt.MouseInfo;
-import java.awt.Point;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -84,17 +82,6 @@ public class ClientThread extends Thread {
 				robot.mouseWheel(1);
 			} else if (command.equals("scrollUp")) {
 				robot.mouseWheel(-1);
-			} else if (command.startsWith("move;")) {
-				String[] coords = command.split(";");
-				Point mousePos = MouseInfo.getPointerInfo().getLocation();
-				try {
-					int newCoordX = mousePos.x + Integer.parseInt(coords[1]);
-					int newCoordY = mousePos.y + Integer.parseInt(coords[2]);
-					robot.mouseMove(newCoordX, newCoordY);
-					System.out.println("moving from " + mousePos.x + " to +" + coords[1]);
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
-				}
 			} else {
 				JSONObject json = (JSONObject) JSONValue.parse(command);
 				if (json.containsKey("inbox")) {

@@ -19,6 +19,7 @@ public class TouchPadActivity extends Activity implements OnClickListener {
 		TouchListener touchListener = TouchListener.getInstance();
 		PilotListener pilotListener = PilotListener.getInstance();
 
+		touchListener.setContext(getApplicationContext());
 		pilotListener.setTv((TextView) findViewById(R.id.sendText));
 
 		TextView touchpad = (TextView) findViewById(R.id.touchpadSurface);

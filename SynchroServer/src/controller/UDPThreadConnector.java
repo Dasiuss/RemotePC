@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
-public class UDPThread extends Thread {
+public class UDPThreadConnector extends Thread {
 
 	@Override
 	public void run() {

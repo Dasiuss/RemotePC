@@ -21,6 +21,7 @@ public class PilotActivity extends Activity {
 
 		pilotListener = PilotListener.getInstance();
 		touchListener = TouchListener.getInstance();
+		touchListener.setContext(getApplicationContext());
 
 		findViewById(R.id.downB).setOnClickListener(pilotListener);
 		findViewById(R.id.enterB).setOnClickListener(pilotListener);
@@ -36,6 +37,7 @@ public class PilotActivity extends Activity {
 		findViewById(R.id.volumeMuteB).setOnClickListener(pilotListener);
 		findViewById(R.id.volumeUpB).setOnClickListener(pilotListener);
 		findViewById(R.id.touchpad).setOnClickListener(pilotListener);
+
 		findViewById(R.id.volumeDownB).setOnTouchListener(touchListener);
 		findViewById(R.id.volumeMuteB).setOnTouchListener(touchListener);
 		findViewById(R.id.volumeUpB).setOnTouchListener(touchListener);

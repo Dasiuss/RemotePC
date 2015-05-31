@@ -39,7 +39,7 @@ class UDPConnectionTask extends AsyncTask<String, Integer, Void> {
 			try {
 				packet = new DatagramPacket(localPortBytes, localPortBytes.length,
 						ConnectionManager.getBroadcastAddress(connectionController.context),
-						this.connectionController.UDPPORT);
+						this.connectionController.UDPCONNECTIONPORT);
 				socket.send(packet);
 
 				byte[] buf = new byte[4];
