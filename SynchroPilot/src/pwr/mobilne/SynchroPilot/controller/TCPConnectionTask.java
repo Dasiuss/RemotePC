@@ -26,11 +26,11 @@ public class TCPConnectionTask extends AsyncTask<String, Integer, Void> {
 	protected Void doInBackground(String... params) {
 		Socket socket = null;
 		String host = params[0];
-		if (ConnectionController.getInstance().socketReady) {
+		if (ConnectionController.getInstance().pilotSocket != null
+				&& ConnectionController.getInstance().pilotSocket.isConnected()) {
 			this.cancel(false);
-		} else {
-
-			if ((socket = portIsOpen(host, this.connectionController.PILOT_PORT, 100)) == null) this.cancel(false);
+		} else if ((socket = portIsOpen(host, this.connectionController.PILOT_PORT, 100)) == null) {
+			this.cancel(false);
 		}
 		if (socket != null) {
 			this.connectionController.setSocket(socket, true);

@@ -85,12 +85,32 @@ public class ClientThread extends Thread {
 			} else {
 				JSONObject json = (JSONObject) JSONValue.parse(command);
 				if (json.containsKey("inbox")) {
-					// TODO tu wywo³aj swoj¹ metodê Mateusz
+					// view.Layout.setSMS(json);
 				} else if (json.containsKey("contactsJson")) {
-					// TODO tu wywo³aj inn¹ swoj¹ metodê Mateusz
+					json.remove("contactsJson");
+					// view.Layout.setContacts(json);
 				}
 				System.out.println("nierozpoznano polecenia " + command);
 			}
 		}
+	}
+
+	public void sendSMS(String number, String message) {
+		JSONObject json = new JSONObject();
+		json.put("number", number);
+		json.put("message", message);
+		out.println(json.toJSONString());
+	}
+
+	public void getSMS() {
+		JSONObject json = new JSONObject();
+		json.put("getSMS", "1");
+		out.println(json.toJSONString());
+	}
+
+	public void getContacts() {
+		JSONObject json = new JSONObject();
+		json.put("getContacts", "1");
+		out.println(json.toJSONString());
 	}
 }

@@ -11,6 +11,8 @@ import java.net.Socket;
 import java.net.SocketException;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 
 /**
@@ -23,7 +25,7 @@ public class ConnectionController {
 	public final int PILOT_PORT = 9562;
 	public final int UDPCONNECTIONPORT = 9563;
 	public final int UDPPORT = 9564;
-	private Socket pilotSocket = null;
+	Socket pilotSocket = null;
 	private Socket synchroSocket = null;
 	private PrintWriter out;
 	private BufferedReader in;
@@ -33,6 +35,8 @@ public class ConnectionController {
 	private DatagramPacket sendPacket;
 	Context context;
 	private DatagramSocket UDPSocket;
+	private UDPConnectionTask udpConTask;
+	private TCPConnectionTask tcpConTask;
 
 	public synchronized void sendToUDPSocket(String msg) {
 		try {
@@ -49,12 +53,14 @@ public class ConnectionController {
 				}
 			}.start();
 		} catch (IOException e) {
-			e.printStackTrace();
+			prepareSocket(context);
+		} catch (NullPointerException e) {
+			prepareSocket(context);
 		}
 	}
 
 	public synchronized void sendToSocket(String msg) {
-		if (socketReady) {
+		if (pilotSocket != null && pilotSocket.isConnected()) {
 			out.println(msg);
 		} else {
 			prepareSocket(context);
@@ -64,25 +70,28 @@ public class ConnectionController {
 	public void prepareSocket(Context context) {
 		this.context = context;
 		Log.i("ConnectionUDP", "preparing...");
-		if (!lastFoundIp.equals("")) new TCPConnectionTask(this).execute(lastFoundIp);
-		new UDPConnectionTask(this).execute("");
-		scanIPsForServer();
-	}
+		if (!lastFoundIp.equals("")) {
 
-	/**
-	 * 
-	 */
-	private void scanIPsForServer() {
-		String ip = ConnectionManager.getWifiIpAddress(context);
-		ip = ip.substring(0, ip.lastIndexOf("."));
-		for (int i = 1; i < 255 && pilotSocket == null; i++) {
-			new TCPConnectionTask(this).execute(ip + "." + i);
+			tcpConTask = new TCPConnectionTask(this);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				tcpConTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, lastFoundIp);
+			} else {
+				tcpConTask.execute(lastFoundIp);
+			}
+		}
+		if (udpConTask != null) udpConTask.cancel(true);
+		udpConTask = new UDPConnectionTask(this);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			udpConTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+		} else {
+			udpConTask.execute("");
 		}
 	}
 
 	protected synchronized void setSocket(Socket socket, boolean isForPilot) {
 		if (socket == null) return;
 		if (isForPilot) {
+			Log.i("ConnectionController", "polaczono z " + socket.getInetAddress().getHostAddress());
 			try {
 				UDPSocket = new DatagramSocket();
 				sendPacket = new DatagramPacket(new byte[1024], 1024, socket.getInetAddress(), UDPPORT);
