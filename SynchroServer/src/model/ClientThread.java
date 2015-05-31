@@ -26,10 +26,10 @@ public class ClientThread extends Thread {
 
 	@Override
 	public void run() {
-		Layout l = new Layout();
 		try {
 			in = new Scanner(client.getInputStream(), "UTF-8");
 			out = new PrintStream(client.getOutputStream());
+			Layout l = new Layout();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
