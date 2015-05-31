@@ -106,7 +106,11 @@ public class ConnectionController {
 				in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				socketReady = true;
 
-				new SocketListener(this).execute(in);
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					new SocketListener(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, in);
+				} else {
+					new SocketListener(this).execute(in);
+				}
 
 			} catch (IOException e) {
 				e.printStackTrace();

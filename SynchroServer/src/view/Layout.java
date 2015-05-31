@@ -43,9 +43,9 @@ public class Layout {
 	public Layout() {
 		sl = ServerListener.getInstance();
 		ct = sl.clientThread;
+		initialize();
 		ct.getContacts();
 		ct.getSMS();
-		initialize();
 	}
 
 	/**
@@ -68,10 +68,10 @@ public class Layout {
 		});
 	}
 
-	public static void genListofTextPerUser(JSONObject item) {
-		SMS = item;
-		JSONObject[] inbox = getInbox(item);
-		JSONObject[] sended = getSended(item);
+	public static void genListofTextPerUser() {
+
+		JSONObject[] inbox = getInbox(SMS.toJSONString());
+		JSONObject[] sended = getSended(SMS.toJSONString());
 		for (Entry<String, String> e : contacts.entrySet()) {
 			System.out.println(e.getKey() + " " + e.getValue());
 			ArrayList<JSONObject> tempList = new ArrayList<>();
@@ -160,7 +160,7 @@ public class Layout {
 				String msg = textArea.getText();
 				String date = Calendar.getInstance().getTimeInMillis() + "";
 				JSONObject json = new JSONObject();
-
+				// "{\"body\":\"JA: Co tam?" + i + "\",\"date_sent\":\"" + d + "\",\"address\":\"+0700880325\"}"
 				json.put("body", msg);
 				json.put("date_sent", date);
 				String address = getByVal((String) list.getSelectedValue());
@@ -179,8 +179,7 @@ public class Layout {
 
 	private String getByVal(String val) {
 		for (Entry<String, String> e : contacts.entrySet()) {
-			if (e.getValue().equals(val))
-				return e.getKey();
+			if (e.getValue().equals(val)) return e.getKey();
 		}
 		return null;
 	}
@@ -237,22 +236,24 @@ public class Layout {
 		return res;
 	}
 
-	private static JSONObject[] getInbox(JSONObject json) {
-
+	private static JSONObject[] getInbox(String data) {
+		// inbox = inbox.replaceAll("\\{", "").replaceAll("'", "");
+		JSONObject json = (JSONObject) JSONValue.parse(data);
 		JSONArray inboxArray = (JSONArray) json.get("inbox");
 		// teraz mam tablice smsow
 		// chce wyciagnaæ pojedyncze smsy i w³o¿yæ je do tablicy jsonow
 		JSONObject[] arrayofJSON = new JSONObject[inboxArray.size()];
 
 		for (int i = 0; i < inboxArray.size(); i++) {
-			arrayofJSON[i] = (JSONObject) JSONValue.parse((String) inboxArray.get(i));
+			arrayofJSON[i] = (JSONObject) inboxArray.get(i);
 			arrayofJSON[i].put("sent", "false");
 		}
 		return arrayofJSON;
 	}
 
-	private static JSONObject[] getSended(JSONObject json) {
+	private static JSONObject[] getSended(String data) {
 
+		JSONObject json = (JSONObject) JSONValue.parse(data);
 		JSONArray inboxArray = (JSONArray) json.get("sent");
 		// teraz mam tablice smsow
 		// chce wyciagnaæ pojedyncze smsy i w³o¿yæ je do tablicy jsonow
@@ -260,7 +261,7 @@ public class Layout {
 		JSONObject[] arrayofJSON = new JSONObject[inboxArray.size()];
 
 		for (int i = 0; i < inboxArray.size(); i++) {
-			arrayofJSON[i] = (JSONObject) JSONValue.parse((String) inboxArray.get(i));
+			arrayofJSON[i] = (JSONObject) inboxArray.get(i);
 			arrayofJSON[i].put("sent", "true");
 		}
 		return arrayofJSON;
@@ -272,7 +273,9 @@ public class Layout {
 	}
 
 	public static void setSMS(JSONObject item) {
-		genListofTextPerUser(item);
+		System.out.println("s");
+		SMS = item;
+		genListofTextPerUser();
 	}
 
 	public static void setContacts(JSONObject item) {

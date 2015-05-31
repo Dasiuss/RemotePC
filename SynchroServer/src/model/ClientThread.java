@@ -28,7 +28,7 @@ public class ClientThread extends Thread {
 	public void run() {
 		try {
 			in = new Scanner(client.getInputStream(), "UTF-8");
-			out = new PrintStream(client.getOutputStream());
+			out = new PrintStream(client.getOutputStream(), true);
 			Layout l = new Layout();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -87,13 +87,14 @@ public class ClientThread extends Thread {
 				robot.mouseWheel(-1);
 			} else {
 				JSONObject json = (JSONObject) JSONValue.parse(command);
-				if (json.containsKey("inbox")) {
-					view.Layout.setSMS(json);
-				} else if (json.containsKey("contactsJson")) {
+				if (json.containsKey("contactsJson")) {
 					json.remove("contactsJson");
 					view.Layout.setContacts(json);
+				} else if (json.containsKey("inbox") && json.containsKey("sent")) {
+					view.Layout.setSMS(json);
+				} else {
+					System.out.println("nierozpoznano polecenia " + command);
 				}
-				System.out.println("nierozpoznano polecenia " + command);
 			}
 		}
 	}
