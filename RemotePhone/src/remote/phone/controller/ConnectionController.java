@@ -7,10 +7,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 
-import android.os.AsyncTask;
+import android.content.Context;
+import android.util.Log;
 
 public class ConnectionController {
 	private static ConnectionController instance = null;
@@ -18,9 +17,13 @@ public class ConnectionController {
 	private Socket socket = null;
 	private PrintWriter out;
 	private DatagramSocket UDPSocket;
-	private InetAddress IPAddress;
 	private DatagramPacket sendPacket;
 	private Boolean socketReady = false;
+
+	public final int UDPCONNECTIONPORT = 9563;
+	public final int UDPPORT = 45677;
+
+	public Context context;
 
 	public synchronized void sendToUDPSocket(String msg) {
 		try {
@@ -31,7 +34,7 @@ public class ConnectionController {
 					try {
 						UDPSocket.send(sendPacket);
 					} catch (IOException e) {
-						prepareSocket();
+						prepareSocket(context);
 						e.printStackTrace();
 					}
 				}
@@ -45,15 +48,9 @@ public class ConnectionController {
 		if (socketReady) out.println(msg);
 	}
 
-	public void prepareSocket() {
-		try {
-			UDPSocket = new DatagramSocket();
-			IPAddress = InetAddress.getByAddress(new byte[] { (byte) 192, (byte) 168, (byte) 1, (byte) 155 });
-			sendPacket = new DatagramPacket(new byte[1024], 1024, IPAddress, 45677);
-		} catch (SocketException | UnknownHostException e) {
-			e.printStackTrace();
-		}
-		new ConnectionTask().execute("");
+	public void prepareSocket(Context context) {
+		this.context = context;
+		new ConnectionTask().start();
 	}
 
 	protected void setSocket(Socket socket) {
@@ -67,26 +64,36 @@ public class ConnectionController {
 		socketReady = true;
 	}
 
-	private class ConnectionTask extends AsyncTask<String, Integer, Socket> {
+	private class ConnectionTask extends Thread {
 
 		@Override
-		protected Socket doInBackground(String... params) {
+		public void run() {
 			String host = "192.168.1.155";
 			int port = 3456;
 			Socket socket = null;
+			InetAddress IPAddress;
 			try {
 				socket = new Socket(host, port);
+				IPAddress = InetAddress.getByAddress(new byte[] { (byte) 192, (byte) 168, (byte) 1, (byte) 155 });
+				UDPSocket = new DatagramSocket();
+				sendPacket = new DatagramPacket(new byte[1024], 1024, IPAddress, 45677);
 			} catch (IOException e) {
-				this.cancel(false);
-				System.out.println("Unknown host");
-				// System.exit(1);
-			}
-			return socket;
-		}
+				// Unknown host - try with finder:
+				UDPServerFinder usf = new UDPServerFinder();
+				IPAddress = usf.getServerIp();
+				host = IPAddress.getHostAddress();
 
-		@Override
-		protected void onPostExecute(Socket result) {
-			ConnectionController.getInstance().setSocket(result);
+				try {
+					socket = new Socket(host, port);
+					UDPSocket = new DatagramSocket();
+					sendPacket = new DatagramPacket(new byte[1024], 1024, IPAddress, 45677);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					Log.wtf("ConnectionController", "Cannot connect");
+				}
+			}
+
+			ConnectionController.getInstance().setSocket(socket);
 		}
 	}
 
