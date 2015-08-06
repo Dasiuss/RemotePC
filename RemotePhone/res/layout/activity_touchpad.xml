@@ -1,0 +1,97 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".view.TouchPadActivity" >
+
+    <android.gesture.GestureOverlayView
+        android:id="@+id/touchpad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/LPM"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/escB"
+        android:background="@drawable/center1" >
+    </android.gesture.GestureOverlayView>
+
+    <Button
+        android:id="@+id/refreshB"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="62dp"
+        android:layout_height="55dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:drawableTop="@drawable/refresh" />
+
+    <Button
+        android:id="@+id/altTabB"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="62dp"
+        android:layout_height="55dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/refreshB"
+        android:drawableTop="@drawable/alttab" />
+
+    <Button
+        android:id="@+id/enterB"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/altTabB"
+        android:drawableTop="@drawable/entermin" />
+
+    <Button
+        android:id="@+id/backB"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="62dp"
+        android:layout_height="55dp"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/refreshB"
+        android:drawableTop="@drawable/back" />
+
+    <Button
+        android:id="@+id/escB"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/backB"
+        android:drawableTop="@drawable/esc" />
+
+    <Button
+        android:id="@+id/LPM"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/PPM"
+        android:text="@string/lpm" />
+
+    <Button
+        android:id="@+id/kulka"
+        android:layout_width="30dp"
+        android:layout_height="70dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="#000"
+        android:drawableTop="@drawable/updown" />
+
+    <Button
+        android:id="@+id/PPM"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:layout_alignLeft="@+id/altTabB"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/ppm" />
+
+</RelativeLayout>
