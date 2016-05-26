@@ -1,8 +1,5 @@
 package remote.phone.view;
 
-import remote.phone.R;
-import remote.phone.controller.ConnectionController;
-import remote.phone.model.MenuListener;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -10,13 +7,16 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import remote.phone.R;
+import remote.phone.controller.ConnectionController;
+import remote.phone.model.MenuListener;
 
 public class MainActivity extends Activity {
 
 	/**
-	 * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the sections. We use a
-	 * {@link FragmentPagerAdapter} derivative, which will keep every loaded fragment in memory. If this becomes too
-	 * memory intensive, it may be best to switch to a {@link android.support.v13.app.FragmentStatePagerAdapter}.
+	 * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the sections. We use a {@link FragmentPagerAdapter} derivative,
+	 * which will keep every loaded fragment in memory. If this becomes too memory intensive, it may be best to switch to a
+	 * {@link android.support.v13.app.FragmentStatePagerAdapter}.
 	 */
 	SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onResume() {
-		ConnectionController.getInstance().prepareSocket();
+		ConnectionController.getInstance().prepareSocket(getApplicationContext());
 		super.onResume();
 	}
 

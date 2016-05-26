@@ -19,7 +19,7 @@ public class TouchPadListener implements OnTouchListener {
 	public TouchPadListener(Context context) {
 		this.con = ConnectionController.getInstance();
 		vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-		con.prepareSocket();
+		con.prepareSocket(context);
 
 	}
 
